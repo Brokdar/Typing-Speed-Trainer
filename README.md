@@ -1,0 +1,2 @@
+# Typing-Speed-Trainer
+This program helps you in improving your typing speed. It takes the texts from web pages, for example news reports, as a dynamic resource for the writing exercises.  It provides statistics about your typing speed as words per minute (wpm) or characters per minute (cpm). After every typing exercise you can see your statistics for the previous exercise. You can also see your overall statistics.
