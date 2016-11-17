@@ -1,0 +1,456 @@
+﻿<Window x:Class="Typing_Speed_Trainer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Typing_Speed_Trainer"
+        mc:Ignorable="d"
+        Title="Typing Speed Trainer" Height="680" Width="1024" MinWidth="1024" MinHeight="680">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="RadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10,0"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+        </Style>
+
+        <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="10,0"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+        </Style>
+
+        <Style x:Key="ToolTipStyle" TargetType="TextBlock">
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style x:Key="LabelInformationStyle" BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+
+        <Style x:Key="LabelStatisicsStyle" BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="LabelStatisicsValueStyle" BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Padding" Value="0,0,50,0"/>
+        </Style>
+
+        <Style x:Key="ExerciseLabelStyle" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,0"/>
+            <Setter Property="BorderBrush" Value="#FF6E6E6E"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFB6B6B6" Offset="0"/>
+                        <GradientStop Color="#FF7E7C7C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="UrlStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Calibri Italic"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderBrush" Value="#FF8B8B8B"/>
+        </Style>
+
+        <Style x:Key="ComboboxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Calibri"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderBrush" Value="#FF8B8B8B"/>
+        </Style>
+
+    </Window.Resources>
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFCDCDCD" Offset="0"/>
+            <GradientStop Color="#FF979797" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Configuration Header -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Mode decision -->
+            <StackPanel Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                <RadioButton x:Name="PraticeModeRadioButton" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Content="Practice Mode">
+                    <RadioButton.ToolTip>
+                        <TextBlock Style="{StaticResource ToolTipStyle}">
+                            This mode takes the content of the chosen
+                            web page for practicing typing
+                        </TextBlock>
+                    </RadioButton.ToolTip>
+                </RadioButton>
+                <RadioButton x:Name="ProgrammerModeRadioButton" Style="{StaticResource RadioButtonStyle}" Content="Programmer's Mode">
+                    <RadioButton.ToolTip>
+                        <TextBlock Style="{StaticResource ToolTipStyle}">
+                            This mode takes a random public repository from Github
+                            in the chosen language to pratice typing of code
+                        </TextBlock>
+                    </RadioButton.ToolTip>
+                </RadioButton>
+                <CheckBox x:Name="SpeedCheckBox" Style="{StaticResource CheckBoxStyle}" Content="Speeding Mode">
+                    <CheckBox.ToolTip>
+                        <TextBlock Style="{StaticResource ToolTipStyle}">
+                            With this mode activated you're forced to type faster.
+                            A progressbar indicates the speed of your average typing speed,
+                            enhanced by the chosen percentage
+                        </TextBlock>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+            </StackPanel>
+
+            <!-- Additional configuration for speed mode -->
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Orientation="Horizontal" 
+                        Visibility="{Binding ElementName=SpeedCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label Content="Targeted speed enhancement:"/>
+                <Slider x:Name="SpeedSlider" Width="150" Margin="5,1,5,0" VerticalAlignment="Center"
+                    Value="2" Minimum="1" Maximum="10" TickFrequency="1" 
+                    IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" 
+                />
+                <Label Width="30" HorizontalContentAlignment="Right" Content="{Binding ElementName=SpeedSlider, Path=Value}" ContentStringFormat="{}{0:##}%" Margin="0,0,10,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Praticise Section -->
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+              Visibility="{Binding ElementName=PraticeModeRadioButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Style="{StaticResource LabelInformationStyle}" Content="URL:"/>
+            <TextBox Grid.Column="1" Style="{StaticResource UrlStyle}" Text="http://..." Margin="10,0,20,0">
+                <TextBox.ToolTip>
+                    <TextBlock Style="{StaticResource ToolTipStyle}">
+                        URL to web page which content will be used for the following exercises
+                    </TextBlock>
+                </TextBox.ToolTip>
+            </TextBox>
+            <Label Grid.Column="2" Style="{StaticResource LabelInformationStyle}" Content="Recently searched:"/>
+            <ComboBox Grid.Column="3" Style="{StaticResource ComboboxStyle}" SelectedIndex="0" MinWidth="200" Margin="10,0,15,0">
+                <ComboBoxItem Content="Wikipedia.de"/>
+                <ComboBoxItem Content="Spiegel.de"/>
+                <ComboBoxItem Content="NY Times"/>
+            </ComboBox>
+            <Button Grid.Column="4" Style="{StaticResource ButtonStyle}" Content="Search Web" />
+        </Grid>
+
+        <!-- Programmer's Section -->
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+              Visibility="{Binding ElementName=ProgrammerModeRadioButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Style="{StaticResource LabelInformationStyle}" Content="Search:"/>
+            <TextBox Grid.Column="1" Style="{StaticResource UrlStyle}" Margin="10,0,30,0">
+                <TextBox.ToolTip>
+                    <TextBlock Style="{StaticResource ToolTipStyle}">
+                        Specify a tag which should be considered in the search term
+                    </TextBlock>
+                </TextBox.ToolTip>
+            </TextBox>
+            <Label Grid.Column="2" Style="{StaticResource LabelInformationStyle}" Content="Language:"/>
+            <ComboBox Grid.Column="3" Style="{StaticResource ComboboxStyle}" SelectedIndex="7" Width="130" Margin="10,0,30,0" >
+                <ComboBoxItem Content="C"/>
+                <ComboBoxItem Content="C#"/>
+                <ComboBoxItem Content="C++"/>
+                <ComboBoxItem Content="CSS"/>
+                <ComboBoxItem Content="Go"/>
+                <ComboBoxItem Content="HTML"/>
+                <ComboBoxItem Content="Java"/>
+                <ComboBoxItem Content="JavaScript"/>
+                <ComboBoxItem Content="PHP"/>
+                <ComboBoxItem Content="Python"/>
+                <ComboBoxItem Content="Ruby"/>
+                <ComboBoxItem Content="Swift"/>
+            </ComboBox>
+            <Button Grid.Column="4" Style="{StaticResource ButtonStyle}" Content="Search GitHub"/>
+        </Grid>
+
+        <!-- Exercise Label -->
+        <Label Grid.Row="2" Style="{StaticResource ExerciseLabelStyle}"/>
+
+        <!-- Statistics -->
+        <GroupBox Grid.Row="3" Padding="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Header="Statistics" FontSize="20" FontFamily="Calibri">
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Character Count -->
+                <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="Character Count:"/>
+                <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="300"/>
+
+                <!-- Error Count -->
+                <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelStatisicsStyle}" Content="Error Count:"/>
+                <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Foreground="Red" Content="6"/>
+
+                <!-- Time takten -->
+                <Label Grid.Column="4" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="Time taken:" Padding="80,0,0,0"/>
+                <Label Grid.Column="5" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="01:00" Padding="0"/>
+
+                <!-- Error -->
+                <Label Grid.Column="4" Grid.Row="1" Style="{StaticResource LabelStatisicsStyle}" Content="Error:" Padding="80,0,0,0"/>
+                <Label Grid.Column="5" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="2%" Padding="0"/>
+
+                <!-- WPM -->
+                <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="WPM:" Padding="0,10,0,0"/>
+                <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="50" Padding="0,10,50,0"/>
+
+                <!-- CPM -->
+                <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="CPM:"/>
+                <Label Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="250"/>
+
+                <!-- Current Average WPM -->
+                <Label Grid.Column="2" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="Current average WPM:" Padding="50,10,0,0"/>
+                <Label Grid.Column="3" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="47" Padding="0,10,40,0"/>
+
+                <!-- Current Average CPM -->
+                <Label Grid.Column="2" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="Current average CPM:" Padding="50,0,0,0"/>
+                <Label Grid.Column="3" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="235" Padding="0,0,40,0"/>
+
+                <!-- Overall Average WPM -->
+                <Label Grid.Column="4" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="Overall average WPM:" Padding="80,10,0,0"/>
+                <Label Grid.Column="5" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="45" Padding="0,10,0,0"/>
+
+                <!-- Overall Average CPM -->
+                <Label Grid.Column="4" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="Overall average CPM:" Padding="80,0,0,0"/>
+                <Label Grid.Column="5" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="225" Padding="0"/>
+
+                <!-- Type errors -->
+                <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Style="{StaticResource ExerciseLabelStyle}" Content="This is a example text with 300 characters ..." Padding="20,0" Margin="0"/>
+
+                <!-- Errors listed on finger fails -->
+                <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- left little finger -->
+                    <Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Stroke="Black">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF8EEFFF" Offset="0"/>
+                                <GradientStop Color="#FF369BAC" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Little"/>
+
+                    <!-- left ring finger -->
+                    <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="-1,0,0,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF2FFA0" Offset="0"/>
+                                <GradientStop Color="#FF869338" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Ring"/>
+
+                    <!-- left middle finger -->
+                    <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="-1,0,0,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFFF9C9C" Offset="0"/>
+                                <GradientStop Color="#FFB25662" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Middle"/>
+
+                    <!-- left index finger -->
+                    <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="-1,0,0,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFB1FBA1" Offset="0"/>
+                                <GradientStop Color="#FF6FB460" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Index"/>
+
+                    <!-- left thumb -->
+                    <Rectangle Grid.Column="4" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="-1,0,0,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFD18EFF" Offset="0"/>
+                                <GradientStop Color="#FF9D5ACB" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Thumb"/>
+
+                    <!-- right thumb -->
+                    <Rectangle Grid.Column="6" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="0,0,-1,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFD18EFF" Offset="0"/>
+                                <GradientStop Color="#FF9D5ACB" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Thumb"/>
+
+                    <!-- right index finger -->
+                    <Rectangle Grid.Column="7" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="0,0,-1,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFB1FBA1" Offset="0"/>
+                                <GradientStop Color="#FF6FB460" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="7" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Index"/>
+
+                    <!-- right middle finger -->
+                    <Rectangle Grid.Column="8" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="0,0,-1,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFFF9C9C" Offset="0"/>
+                                <GradientStop Color="#FFB25662" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="8" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Middle"/>
+
+                    <!-- right ring finger -->
+                    <Rectangle Grid.Column="9" Grid.Row="0" Grid.RowSpan="2" Stroke="Black" Margin="0,0,-1,0">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFF2FFA0" Offset="0"/>
+                                <GradientStop Color="#FF869338" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="9" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Ring"/>
+
+                    <!-- right little finger -->
+                    <Rectangle Grid.Column="10" Grid.Row="0" Grid.RowSpan="2" Stroke="Black">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF8EEFFF" Offset="0"/>
+                                <GradientStop Color="#FF369BAC" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="10" Grid.Row="0" HorizontalAlignment="Center" Content="1%"/>
+                    <Label Grid.Column="10" Grid.Row="1" HorizontalAlignment="Center" FontWeight="SemiBold" Content="Little"/>
+
+                </Grid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
