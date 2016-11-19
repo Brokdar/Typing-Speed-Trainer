@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Typing_Speed_Trainer"
         mc:Ignorable="d"
-        Title="Typing Speed Trainer" Height="760" Width="1280" MinWidth="1024" MinHeight="680">
+        Title="Typing Speed Trainer" Height="760" Width="1024" MinWidth="1024" MinHeight="680">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -352,7 +352,7 @@
                 </GroupBox>
 
                 <!-- Current Average -->
-                <GroupBox Header="Current Average" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Padding="5,0" Margin="30,0">
+                <GroupBox Header="Current Average" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Margin="40,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -379,7 +379,7 @@
                 </GroupBox>
 
                 <!-- Overall Average -->
-                <GroupBox Header="Overall Average" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Padding="5,0" Margin="30,0">
+                <GroupBox Header="Overall Average" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Margin="40,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
