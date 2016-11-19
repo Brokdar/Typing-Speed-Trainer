@@ -39,33 +39,33 @@ namespace Typing_Speed_Trainer.StatisicsData
 
         }
 
-        public Statistic(Lesson lesson)
+        public Statistic(LessonResult lesson)
         {
             Evaluate(lesson);
         }
 
-        public void Update(Lesson lesson)
+        public void Update(LessonResult lesson)
         {
             Evaluate(lesson);
         }
 
         #region Evaluation of Lesson
 
-        public void Evaluate(Lesson lesson)
+        public void Evaluate(LessonResult lesson)
         {
             CharactersPerMinute = CalculateCharactersPerMinute(lesson);
             WordsPerMinute = CalculateWordsPerMinute(lesson);
             ErrorRate = CalculateErrorRate(lesson);
         }
 
-        public void AppendEvaluation(Lesson lesson)
+        public void AppendEvaluation(LessonResult lesson)
         {
             CharactersPerMinute = GetAverage(CharactersPerMinute, CalculateCharactersPerMinute(lesson));
             WordsPerMinute = GetAverage(WordsPerMinute, CalculateWordsPerMinute(lesson));
             ErrorRate = GetAverage(ErrorRate, CalculateErrorRate(lesson));
         }
 
-        private int CalculateCharactersPerMinute(Lesson lesson)
+        private int CalculateCharactersPerMinute(LessonResult lesson)
         {
             if (string.IsNullOrEmpty(lesson.RequestedText) || (int)lesson.Duration.TotalSeconds == 0)
                 return 0;
@@ -73,7 +73,7 @@ namespace Typing_Speed_Trainer.StatisicsData
             return (int)Math.Round((lesson.CharacterCount * 60.0) / (int)lesson.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
         }
 
-        private int CalculateWordsPerMinute(Lesson lesson)
+        private int CalculateWordsPerMinute(LessonResult lesson)
         {
             if (string.IsNullOrEmpty(lesson.RequestedText) || (int)lesson.Duration.TotalSeconds == 0)
                 return 0;
@@ -82,7 +82,7 @@ namespace Typing_Speed_Trainer.StatisicsData
             return (int)Math.Round((wordCount * 60.0) / (int)lesson.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
         }
 
-        private double CalculateErrorRate(Lesson lesson)
+        private double CalculateErrorRate(LessonResult lesson)
         {
             if (string.IsNullOrEmpty(lesson.RequestedText) || string.IsNullOrEmpty(lesson.WrittenText))
                 return 0.0;

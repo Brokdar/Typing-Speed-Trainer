@@ -59,6 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DummyLessonCreator.cs" />
+    <Compile Include="Lesson.cs" />
+    <Compile Include="LessonCreator.cs" />
+    <Compile Include="OutOfLessonsException.cs" />
     <Compile Include="StatisicsData\Statistic.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -75,7 +79,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StatisicsData\Lesson.cs" />
+    <Compile Include="StatisicsData\LessonResult.cs" />
     <Compile Include="StatisicsData\NotifiableDataBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

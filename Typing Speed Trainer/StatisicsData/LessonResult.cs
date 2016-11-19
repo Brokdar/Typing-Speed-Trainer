@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Typing_Speed_Trainer.StatisicsData
 {
-    public class Lesson : NotifiableDataBase
+    public class LessonResult : NotifiableDataBase
     {
         private string _requestedText;
 
@@ -45,12 +45,12 @@ namespace Typing_Speed_Trainer.StatisicsData
             internal set { SetProperty(ref _errorCount, value); }
         }
 
-        public Lesson()
+        public LessonResult()
         {
 
         }
 
-        public Lesson(string requested, string written, TimeSpan duration)
+        public LessonResult(string requested, string written, TimeSpan duration)
         {
             Update(requested, written, duration);
         }
