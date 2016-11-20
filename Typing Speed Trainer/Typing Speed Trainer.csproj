@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CharacterChecker.cs" />
     <Compile Include="DummyLessonCreator.cs" />
     <Compile Include="Lesson.cs" />
     <Compile Include="LessonCreator.cs" />

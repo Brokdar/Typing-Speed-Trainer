@@ -289,7 +289,7 @@
         </Grid>
 
         <!-- Exercise TextBlock -->
-        <TextBlock Grid.Row="2" Style="{StaticResource ExerciseTextStyle}" Text="This is an example text ..."/>
+        <TextBlock Grid.Row="2" Style="{StaticResource ExerciseTextStyle}" Text="This␣is␣an␣example␣text␣...⏎"/>
 
         <!-- Statistics -->
         <GroupBox Grid.Row="3" Padding="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Header="Statistics" FontSize="20" FontFamily="Calibri">
