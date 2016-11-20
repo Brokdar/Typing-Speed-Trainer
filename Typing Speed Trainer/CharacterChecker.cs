@@ -11,7 +11,7 @@ namespace Typing_Speed_Trainer
                 return true;
             }
             // Check for blank box character '␣'
-            else if (reference == '\u2423' && target == ' ')
+            else if (reference == '\u2423' && target == ' ' && Keyboard.IsKeyDown(Key.Space))
             {
                 return true;
             }
