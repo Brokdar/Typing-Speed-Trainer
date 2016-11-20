@@ -5,13 +5,17 @@ namespace Typing_Speed_Trainer.StatisicsData
 {
     public class LessonResult : NotifiableDataBase
     {
-        private string _requestedText;
+        private Lesson _lesson;
 
-        public string RequestedText
+        public Lesson Lesson
         {
-            get { return _requestedText; }
-            internal set { SetProperty(ref _requestedText, value); }
+            get { return _lesson; }
+            set { SetProperty(ref _lesson, value); }
         }
+
+
+        public int CharacterCount => _lesson.Count;
+        public Difficulty Difficulty => _lesson.Difficulty;
 
         private string _writtenText;
 
@@ -29,14 +33,6 @@ namespace Typing_Speed_Trainer.StatisicsData
             internal set { SetProperty(ref _duration, value); }
         }
 
-        private int _characterCount;
-
-        public int CharacterCount
-        {
-            get { return _characterCount; }
-            internal set { SetProperty(ref _characterCount, value); }
-        }
-
         private int _errorCount;
 
         public int ErrorCount
@@ -45,34 +41,28 @@ namespace Typing_Speed_Trainer.StatisicsData
             internal set { SetProperty(ref _errorCount, value); }
         }
 
-        public LessonResult()
+        public LessonResult(Lesson lesson, string written, TimeSpan duration)
         {
-
+            Update(lesson, written, duration);
         }
 
-        public LessonResult(string requested, string written, TimeSpan duration)
+        public void Update(Lesson lesson, string written, TimeSpan duration)
         {
-            Update(requested, written, duration);
-        }
-
-        public void Update(string requested, string written, TimeSpan duration)
-        {
-            if (string.IsNullOrEmpty(requested) || string.IsNullOrEmpty(written) || duration.Seconds == 0)
+            if (string.IsNullOrEmpty(lesson.Content) || string.IsNullOrEmpty(written) || duration.Seconds == 0)
                 return;
 
-            RequestedText = requested;
+            _lesson = lesson;
             WrittenText = written;
             Duration = duration;
-            CharacterCount = requested.Length;
             GetErrorCount();
         }
 
         private void GetErrorCount()
         {
-            if (string.IsNullOrEmpty(RequestedText) || string.IsNullOrEmpty(WrittenText))
+            if (string.IsNullOrEmpty(_lesson.Content) || string.IsNullOrEmpty(WrittenText))
                 return;
 
-            var errorCount = WrittenText.Length - RequestedText.Length;
+            var errorCount = WrittenText.Length - _lesson.Content.Length;
 
             Debug.Assert(errorCount >= 0, "errorCount negative");
 

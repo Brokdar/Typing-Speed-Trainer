@@ -33,61 +33,85 @@ namespace Typing_Speed_Trainer.StatisicsData
             internal set { SetProperty(ref _errorRate, value); }
         }
 
+        private int _score;
+
+        [JsonProperty]
+        public int Score
+        {
+            get { return _score; }
+            internal set { SetProperty(ref _score, value); }
+        }
+
 
         public Statistic()
         {
 
         }
 
-        public Statistic(LessonResult lesson)
+        public Statistic(LessonResult result)
         {
-            Evaluate(lesson);
+            Evaluate(result);
         }
 
-        public void Update(LessonResult lesson)
+        public void Update(LessonResult result)
         {
-            Evaluate(lesson);
+            Evaluate(result);
         }
 
         #region Evaluation of Lesson
 
-        public void Evaluate(LessonResult lesson)
+        public void Evaluate(LessonResult result)
         {
-            CharactersPerMinute = CalculateCharactersPerMinute(lesson);
-            WordsPerMinute = CalculateWordsPerMinute(lesson);
-            ErrorRate = CalculateErrorRate(lesson);
+            if (result == null)
+            {
+                return;
+            }
+
+            CharactersPerMinute = CalculateCharactersPerMinute(result);
+            WordsPerMinute = CalculateWordsPerMinute(result);
+            ErrorRate = CalculateErrorRate(result);
+            Score = CalculateScore(result);
         }
 
-        public void AppendEvaluation(LessonResult lesson)
+        private int CalculateScore(LessonResult result)
         {
-            CharactersPerMinute = GetAverage(CharactersPerMinute, CalculateCharactersPerMinute(lesson));
-            WordsPerMinute = GetAverage(WordsPerMinute, CalculateWordsPerMinute(lesson));
-            ErrorRate = GetAverage(ErrorRate, CalculateErrorRate(lesson));
+            var wordsPerMinute = CalculateWordsPerMinute(result);
+            var score = result.CharacterCount * wordsPerMinute / (1.0 + result.ErrorCount * result.ErrorCount);
+
+            return (int)Math.Round(score, 0, MidpointRounding.AwayFromZero);
         }
 
-        private int CalculateCharactersPerMinute(LessonResult lesson)
+        public void AppendEvaluation(LessonResult result)
         {
-            if (string.IsNullOrEmpty(lesson.RequestedText) || (int)lesson.Duration.TotalSeconds == 0)
+            CharactersPerMinute = GetAverage(CharactersPerMinute, CalculateCharactersPerMinute(result));
+            WordsPerMinute = GetAverage(WordsPerMinute, CalculateWordsPerMinute(result));
+            ErrorRate = GetAverage(ErrorRate, CalculateErrorRate(result));
+            Score = GetAverage(Score, CalculateScore(result));
+        }
+
+        private int CalculateCharactersPerMinute(LessonResult result)
+        {
+            if (string.IsNullOrEmpty(result.Lesson.Content) || (int)result.Duration.TotalSeconds == 0)
                 return 0;
 
-            return (int)Math.Round((lesson.CharacterCount * 60.0) / (int)lesson.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
+            return (int)Math.Round((result.CharacterCount * 60.0) / (int)result.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
         }
 
-        private int CalculateWordsPerMinute(LessonResult lesson)
+        private int CalculateWordsPerMinute(LessonResult result)
         {
-            if (string.IsNullOrEmpty(lesson.RequestedText) || (int)lesson.Duration.TotalSeconds == 0)
+            if (string.IsNullOrEmpty(result.Lesson.Content) || (int)result.Duration.TotalSeconds == 0)
                 return 0;
 
-            var wordCount = lesson.CharacterCount / 5.0;
-            return (int)Math.Round((wordCount * 60.0) / (int)lesson.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
+            var wordCount = result.CharacterCount / 5.0;
+            return (int)Math.Round((wordCount * 60.0) / (int)result.Duration.TotalSeconds, MidpointRounding.AwayFromZero);
         }
 
-        private double CalculateErrorRate(LessonResult lesson)
+        private double CalculateErrorRate(LessonResult result)
         {
-            if (string.IsNullOrEmpty(lesson.RequestedText) || string.IsNullOrEmpty(lesson.WrittenText))
+            if (string.IsNullOrEmpty(result.Lesson.Content) || string.IsNullOrEmpty(result.WrittenText))
                 return 0.0;
 
-            return Math.Round((double)lesson.ErrorCount / lesson.CharacterCount, 2, MidpointRounding.AwayFromZero);
+            return Math.Round((double)result.ErrorCount / result.CharacterCount, 2, MidpointRounding.AwayFromZero);
         }
 
         private int GetAverage(int value1, int value2)
@@ -126,7 +150,7 @@ namespace Typing_Speed_Trainer.StatisicsData
                 return false;
 
             return WordsPerMinute == other.WordsPerMinute && CharactersPerMinute == other.CharactersPerMinute &&
-                   Math.Abs(ErrorRate - other.ErrorRate) < 0.01;
+                   Score == other.Score && Math.Abs(ErrorRate - other.ErrorRate) < 0.01;
         }
 
         public override bool Equals(object obj)
