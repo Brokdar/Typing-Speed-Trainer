@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Typing_Speed_Trainer
+namespace Typing_Speed_Trainer.LessonFactories
 {
     public class OutOfLessonsException : Exception
     {

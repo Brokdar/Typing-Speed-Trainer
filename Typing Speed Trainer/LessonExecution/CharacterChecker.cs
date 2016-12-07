@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Typing_Speed_Trainer
+namespace Typing_Speed_Trainer.LessonExecution
 {
     public class CharacterChecker
     {

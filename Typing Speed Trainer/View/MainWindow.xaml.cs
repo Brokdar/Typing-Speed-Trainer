@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Typing_Speed_Trainer
+namespace Typing_Speed_Trainer.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

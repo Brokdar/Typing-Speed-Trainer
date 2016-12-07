@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Typing_Speed_Trainer
+namespace Typing_Speed_Trainer.View
 {
     /// <summary>
     /// Interaction logic for App.xaml

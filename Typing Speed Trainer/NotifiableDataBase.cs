@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Typing_Speed_Trainer.StatisicsData
+namespace Typing_Speed_Trainer
 {
-    public class NotifiableDataBase : INotifyPropertyChanged
+    public abstract class NotifiableDataBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

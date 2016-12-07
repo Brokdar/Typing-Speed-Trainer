@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Typing_Speed_Trainer.StatisicsData
+namespace Typing_Speed_Trainer.Statistics
 {
     public class LessonResult : NotifiableDataBase
     {
@@ -43,30 +43,22 @@ namespace Typing_Speed_Trainer.StatisicsData
 
         public LessonResult(Lesson lesson, string written, TimeSpan duration)
         {
-            Update(lesson, written, duration);
-        }
-
-        public void Update(Lesson lesson, string written, TimeSpan duration)
-        {
-            if (string.IsNullOrEmpty(lesson.Content) || string.IsNullOrEmpty(written) || duration.Seconds == 0)
-                return;
+            if (string.IsNullOrEmpty(lesson.Content) || string.IsNullOrEmpty(written) || duration.TotalSeconds < 0.0001)
+                throw new ArgumentException("LessonResult: Invalid arguments");
 
             _lesson = lesson;
             WrittenText = written;
             Duration = duration;
-            GetErrorCount();
+            ErrorCount = GetErrorCount();
         }
 
-        private void GetErrorCount()
+        private int GetErrorCount()
         {
-            if (string.IsNullOrEmpty(_lesson.Content) || string.IsNullOrEmpty(WrittenText))
-                return;
-
             var errorCount = WrittenText.Length - _lesson.Content.Length;
 
             Debug.Assert(errorCount >= 0, "errorCount negative");
 
-            ErrorCount = errorCount;
+            return errorCount;
         }
     }
 }

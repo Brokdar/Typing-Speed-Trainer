@@ -31,7 +31,7 @@ namespace Typing_Speed_Trainer
             Difficulty = GetDifficulty(content);
         }
 
-        private Difficulty GetDifficulty(string content)
+        private static Difficulty GetDifficulty(string content)
         {
             var difficultyScore = 0;
 
@@ -55,7 +55,7 @@ namespace Typing_Speed_Trainer
             return ConvertDifficultScore(difficultyScore);
         }
 
-        private Difficulty ConvertDifficultScore(int difficultyScore)
+        private static Difficulty ConvertDifficultScore(int difficultyScore)
         {
             if (difficultyScore == 1)
             {
