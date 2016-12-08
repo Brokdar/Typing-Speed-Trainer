@@ -65,7 +65,7 @@ namespace Typing_Speed_Trainer.Statistics
 
         private static double GetAverage(double value1, double value2)
         {
-            return Math.Round((value1 + value2) / 2.0, 2, MidpointRounding.AwayFromZero);
+            return (value1 + value2) / 2.0;
         }
 
         #region Serialization

@@ -3,50 +3,19 @@ using System.Diagnostics;
 
 namespace Typing_Speed_Trainer.Statistics
 {
-    public class LessonResult : NotifiableDataBase
+    public class LessonResult : EventArgs
     {
-        private Lesson _lesson;
-
-        public Lesson Lesson
-        {
-            get { return _lesson; }
-            set { SetProperty(ref _lesson, value); }
-        }
-
-
-        public int CharacterCount => _lesson.Count;
-        public Difficulty Difficulty => _lesson.Difficulty;
-
-        private string _writtenText;
-
-        public string WrittenText
-        {
-            get { return _writtenText; }
-            internal set { SetProperty(ref _writtenText, value); }
-        }
-
-        private TimeSpan _duration;
-
-        public TimeSpan Duration
-        {
-            get { return _duration; }
-            internal set { SetProperty(ref _duration, value); }
-        }
-
-        private int _errorCount;
-
-        public int ErrorCount
-        {
-            get { return _errorCount; }
-            internal set { SetProperty(ref _errorCount, value); }
-        }
+        public Lesson Lesson { get; internal set; }
+        public string WrittenText { get; internal set; }
+        public TimeSpan Duration { get; internal set; }
+        public int ErrorCount { get; internal set; }
 
         public LessonResult(Lesson lesson, string written, TimeSpan duration)
         {
             if (string.IsNullOrEmpty(lesson.Content) || string.IsNullOrEmpty(written) || duration.TotalSeconds < 0.0001)
                 throw new ArgumentException("LessonResult: Invalid arguments");
 
-            _lesson = lesson;
+            Lesson = lesson;
             WrittenText = written;
             Duration = duration;
             ErrorCount = GetErrorCount();
@@ -54,7 +23,7 @@ namespace Typing_Speed_Trainer.Statistics
 
         private int GetErrorCount()
         {
-            var errorCount = WrittenText.Length - _lesson.Content.Length;
+            var errorCount = WrittenText.Length - Lesson.Content.Length;
 
             Debug.Assert(errorCount >= 0, "errorCount negative");
 

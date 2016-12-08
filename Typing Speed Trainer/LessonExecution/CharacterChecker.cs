@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-namespace Typing_Speed_Trainer.LessonExecution
+﻿namespace Typing_Speed_Trainer.LessonExecution
 {
     public class CharacterChecker
     {
@@ -11,12 +9,12 @@ namespace Typing_Speed_Trainer.LessonExecution
                 return true;
             }
             // Check for blank box character '␣'
-            else if (reference == '\u2423' && target == ' ' && Keyboard.IsKeyDown(Key.Space))
+            else if (reference == '\u2423' && target == ' ')
             {
                 return true;
             }
             // Check for return character '⏎'
-            else if (reference == '\u23ce' && target == ' ' && Keyboard.IsKeyDown(Key.Enter))
+            else if (reference == '\u23ce' && target == '\r')
             {
                 return true;
             }

@@ -4,12 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Typing_Speed_Trainer"
+        xmlns:view="clr-namespace:Typing_Speed_Trainer.View"
         mc:Ignorable="d"
-        Title="Typing Speed Trainer" Height="760" Width="1024" MinWidth="1024" MinHeight="680">
+        Title="Typing Speed Trainer" Height="760" Width="1024" MinWidth="1024" MinHeight="680" PreviewKeyDown="OnKeyDown" TextInput="OnTextInput">
 
     <Window.Resources>
         <ResourceDictionary>
+            <!--
             <local:TypingSpeedTrainerViewModel x:Key="ViewModel"/>
+            -->
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -66,6 +69,18 @@
             </Style>
 
             <Style x:Key="ExerciseTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="FontSize" Value="25"/>
+                <Setter Property="FontFamily" Value="Courier New"/>
+                <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="Margin" Value="25"/>
+                <Setter Property="Background" Value="{x:Null}"/>
+            </Style>
+
+            <Style x:Key="ResultStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="FontSize" Value="25"/>
                 <Setter Property="FontFamily" Value="Courier New"/>
                 <Setter Property="FontWeight" Value="DemiBold"/>
@@ -169,7 +184,7 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid DataContext="{StaticResource ViewModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -239,7 +254,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" Style="{StaticResource LabelInformationStyle}" Content="URL:"/>
-            <TextBox Grid.Column="1" Style="{StaticResource UrlStyle}" Text="{Binding SourceUri}" Margin="10,0,20,0">
+            <TextBox Grid.Column="1" Style="{StaticResource UrlStyle}" Text="{Binding CurrentUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,20,0">
                 <TextBox.ToolTip>
                     <TextBlock Style="{StaticResource ToolTipStyle}">
                         URL to web page which content will be used for the following exercises
@@ -247,8 +262,8 @@
                 </TextBox.ToolTip>
             </TextBox>
             <Label Grid.Column="2" Style="{StaticResource LabelInformationStyle}" Content="Recently searched:"/>
-            <ComboBox ItemsSource="{Binding LastVisitedUris}" SelectedIndex="{Binding SelectedUri}" Grid.Column="3" Style="{StaticResource ComboboxStyle}" MinWidth="200" Margin="10,0,15,0"/>
-            <Button Grid.Column="4" Style="{StaticResource ButtonStyle}" Content="Search Web"/>
+            <ComboBox ItemsSource="{Binding LastVisitedUris}" SelectedIndex="{Binding SelectedUriIndex}" Grid.Column="3" Style="{StaticResource ComboboxStyle}" MinWidth="200" Margin="10,0,15,0"/>
+            <Button Command="{Binding CreateLessonCommand}" Grid.Column="4" Style="{StaticResource ButtonStyle}" Content="Search Web"/>
         </Grid>
 
         <!-- Programmer's Section -->
@@ -287,8 +302,12 @@
             <Button Grid.Column="4" Style="{StaticResource ButtonStyle}" Content="Search GitHub"/>
         </Grid>
 
-        <!-- Exercise TextBlock -->
-        <TextBlock Grid.Row="2" Style="{StaticResource ExerciseTextStyle}" Text="{Binding CurrentLesson.Content}" />
+        <!-- Exercise TextBox -->
+        <TextBlock Grid.Row="2" Style="{StaticResource ResultStyle}" Text="{Binding Content}" IsEnabled="False">
+            <TextBlock.TextEffects>
+                <TextEffect PositionStart="{Binding CaretPosition}" PositionCount="1" Foreground="DeepPink"></TextEffect>
+            </TextBlock.TextEffects>
+        </TextBlock>
 
         <!-- Statistics -->
         <GroupBox Grid.Row="3" Padding="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Header="Statistics" FontSize="20" FontFamily="Calibri">
@@ -310,18 +329,18 @@
 
                 <!-- Character Count -->
                 <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="Count:" HorizontalAlignment="Right"/>
-                <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="300" HorizontalContentAlignment="Left"/>
+                <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonResult.CharacterCount}" HorizontalContentAlignment="Left"/>
 
                 <!-- Error Count -->
                 <Label Grid.Column="2" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="Error:" HorizontalContentAlignment="Right"/>
-                <Label Grid.Column="3" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Foreground="Red" Content="6" HorizontalContentAlignment="Left"/>
+                <Label Grid.Column="3" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonResult.ErrorCount}" HorizontalContentAlignment="Left"/>
 
                 <!-- Time takten -->
                 <Label Grid.Column="4" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="Time:" HorizontalContentAlignment="Right"/>
-                <Label Grid.Column="5" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="01:00" HorizontalContentAlignment="Left"/>
+                <Label Grid.Column="5" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonResult.Duration}" HorizontalContentAlignment="Left"/>
 
-                <!-- Type errors -->
-                <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Style="{StaticResource ExerciseTextStyle}" Text="This is an example text with 300 characters ..."/>
+                <!-- Typed in text with errors if made -->
+                <TextBlock view:Attached.FormattedText="{Binding LessonResult.WrittenText}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Style="{StaticResource ResultStyle}"/>
 
                 <!-- Lesson -->
                 <GroupBox Header="Last Lesson" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Margin="40,0">
@@ -334,19 +353,24 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <!-- WPM -->
                         <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="WPM:"/>
-                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="50"/>
+                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonStatistic.WPM}"/>
 
                         <!-- CPM -->
                         <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelStatisicsStyle}" Content="CPM:"/>
-                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="250"/>
+                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonStatistic.CPM}"/>
 
                         <!-- Error in percent -->
                         <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="Error:"/>
-                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="2%"/>
+                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonStatistic.ErrorRate}"/>
+                        
+                        <!-- Score -->
+                        <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="Score"/>
+                        <Label Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonStatistic.Score}"/>
                     </Grid>
                 </GroupBox>
 
@@ -361,19 +385,24 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <!-- Current Average WPM -->
                         <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="WPM:"/>
-                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="47"/>
+                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding SessionStatistic.WPM}"/>
 
                         <!-- Current Average CPM -->
                         <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelStatisicsStyle}" Content="CPM:"/>
-                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="235"/>
+                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding SessionStatistic.CPM}"/>
 
                         <!-- Current Average Error in percent -->
                         <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="Error:"/>
-                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="10,78%"/>
+                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding SessionStatistic.ErrorRate}"/>
+
+                        <!-- Current Average Score -->
+                        <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="Score"/>
+                        <Label Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding SessionStatistic.Score}"/>
                     </Grid>
                 </GroupBox>
 
@@ -388,19 +417,24 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Current Average WPM -->
+                        <!-- Overall Average WPM -->
                         <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource LabelStatisicsStyle}" Content="WPM:"/>
-                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="45"/>
+                        <Label Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding OverallStatistic.WPM}"/>
 
-                        <!-- Current Average CPM -->
+                        <!-- Overall Average CPM -->
                         <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelStatisicsStyle}" Content="CPM:"/>
-                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="225"/>
+                        <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding OverallStatistic.CPM}"/>
 
-                        <!-- Current Average Error in percent -->
+                        <!-- Overall Average Error in percent -->
                         <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStatisicsStyle}" Content="Error:"/>
-                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="2.15%"/>
+                        <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding OverallStatistic.ErrorRate}"/>
+
+                        <!-- Overall Average Score -->
+                        <Label Grid.Column="0" Grid.Row="3" Style="{StaticResource LabelStatisicsStyle}" Content="Score"/>
+                        <Label Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding OverallStatistic.Score}"/>
                     </Grid>
                 </GroupBox>
 

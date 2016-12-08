@@ -41,6 +41,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,6 +62,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="LessonExecution\CharacterChecker.cs" />
+    <Compile Include="LessonExecution\LessonExecutionException.cs" />
     <Compile Include="LessonFactories\DummyLessonFactory.cs" />
     <Compile Include="Lesson.cs" />
     <Compile Include="LessonFormater\ILessonFormater.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="LessonFactories\OutOfLessonsException.cs" />
     <Compile Include="LessonFormater\PracticeLessonFormater.cs" />
     <Compile Include="LessonFormater\ProgrammerLessonFormater.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Statistics\LessonEvaluationService.cs" />
     <Compile Include="Statistics\Statistic.cs" />
     <Page Include="View\MainWindow.xaml">
@@ -76,10 +80,14 @@
     </Page>
     <Compile Include="TypingSpeedTrainer.cs" />
     <Compile Include="TypingSpeedTrainerViewModel.cs" />
+    <Compile Include="LastVisitedUrisCollection.cs" />
+    <Compile Include="TypingSpeedTrainerViewModel.LessonResultRepresentation.cs" />
+    <Compile Include="TypingSpeedTrainerViewModel.StatisticRepresentation.cs" />
     <Compile Include="View\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\Attached.cs" />
     <Compile Include="View\CenterBorderGapMaskConverter.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

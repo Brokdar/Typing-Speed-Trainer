@@ -4,7 +4,7 @@ namespace Typing_Speed_Trainer.LessonFactories
 {
     public class DummyLessonFactory : LessonFactory
     {
-        private const string VeryEasyContent = "This is a very easy example";
+        private const string VeryEasyContent = "this is a very easy example";
         private const string EasyContent = "This is an easy Example";
         private const string MediumContent = "this is a medium example 1234";
         private const string HardContent = "This is a hard Example 1234";
