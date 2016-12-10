@@ -18,6 +18,11 @@
             {
                 return true;
             }
+            // Check for tab character '⇒'
+            else if (reference == '\u21d2' && target == '\t')
+            {
+                return true;
+            }
             else
             {
                 return false;

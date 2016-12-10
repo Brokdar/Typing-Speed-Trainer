@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Typing_Speed_Trainer.View
@@ -30,16 +32,31 @@ namespace Typing_Speed_Trainer.View
                 _viewModel.KeystrokeDetected(' ');
                 e.Handled = true;
             }
+            else if (e.Key == Key.Tab)
+            {
+                _viewModel.KeystrokeDetected('\t');
+                e.Handled = true;
+            }
         }
 
         private void OnTextInput(object sender, TextCompositionEventArgs eventArgs)
         {
             var character = eventArgs.Text.FirstOrDefault();
-            if (character != '\0')
-            {
-                _viewModel.KeystrokeDetected(character);
-                eventArgs.Handled = true;
-            }
+            if (character == '\0')
+                return;
+
+            _viewModel.KeystrokeDetected(character);
+            eventArgs.Handled = true;
+        }
+
+        private void OnClosed(object sender, EventArgs e)
+        {
+            _viewModel.SaveStatistic();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.LoadStatistic();
         }
     }
 }

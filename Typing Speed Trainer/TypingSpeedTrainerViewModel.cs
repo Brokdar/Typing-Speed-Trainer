@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Input;
 
 namespace Typing_Speed_Trainer
@@ -8,6 +9,8 @@ namespace Typing_Speed_Trainer
     {
         private readonly TypingSpeedTrainer _trainer;
 
+        #region Content Representation
+
         private string _content;
         public string Content
         {
@@ -15,12 +18,50 @@ namespace Typing_Speed_Trainer
             set { SetProperty(ref _content, value); }
         }
 
+        private void DisplayLessonContent()
+        {
+            Content = ConvertWhitespacesToVisualCharacters(_currentLesson.Content);
+            HideCaret();
+        }
+
+        private static string ConvertWhitespacesToVisualCharacters(string value)
+        {
+            return value.Replace(' ', '␣').Replace('\r', '⏎').Replace('\t', '⇒');
+        }
+
+        private void NotifiyMessage(string text)
+        {
+            Content = text;
+            HideCaret();
+        }
+
+        #endregion
+
+        #region Caret Manipulation
+
         private int _caretPosition;
         public int CaretPosition
         {
             get { return _caretPosition; }
             set { SetProperty(ref _caretPosition, value); }
         }
+
+        private void DisplayCaret(int position)
+        {
+            if (position < 0 || position >= Content.Length)
+                return;
+
+            CaretPosition = position;
+        }
+
+        private void HideCaret()
+        {
+            CaretPosition = int.MaxValue;
+        }
+
+        #endregion
+
+        #region Statistical Representation
 
         private Lesson _currentLesson;
 
@@ -52,6 +93,15 @@ namespace Typing_Speed_Trainer
             internal set { SetProperty(ref _overallStatistic, value); }
         }
 
+        private void UpdateStatistics()
+        {
+            LessonResult = new LessonResultRepresentation(_trainer.LessonResult);
+            LessonStatistic = new StatisticRepresentation(_trainer.LessonStatistic);
+            SessionStatistic = new StatisticRepresentation(_trainer.SessionStatistic);
+            OverallStatistic = new StatisticRepresentation(_trainer.OverallStatistic);
+        }
+
+        #endregion
 
         private string _currentUri;
         public string CurrentUri
@@ -85,23 +135,18 @@ namespace Typing_Speed_Trainer
             set
             {
                 SetProperty(ref _selectedUriIndex, value);
-                if (SelectedUriIndex >= 0 && SelectedUriIndex < LastVisitedUris.Count)
-                {
-                    _changedByCombobox = true;
-                    CurrentUri = _lastVisited.GetUri(LastVisitedUris[SelectedUriIndex]).ToString();
-                }
+                if (SelectedUriIndex < 0 || SelectedUriIndex >= LastVisitedUris.Count) return;
+                _changedByCombobox = true;
+                CurrentUri = _lastVisited.GetUri(LastVisitedUris[SelectedUriIndex]).ToString();
             }
         }
-
-        public ICommand CreateLessonCommand { get; set; }
 
         public TypingSpeedTrainerViewModel()
         {
             _trainer = new TypingSpeedTrainer();
+            _trainer.ResultsAvailable += OnResultsAvailable;
 
             _changedByCombobox = false;
-            NotifiyMessage("Welcome to Typing-Speed-Trainer");
-
             _lastVisited = new LastVisitedUrisCollection(10);
             _lastVisited.Append(new Uri("https://de.wikipedia.org/wiki/Spezial:Zuf%C3%A4llige_Seite"));
             _lastVisited.Append(new Uri("http://www.spiegel.de/"));
@@ -113,8 +158,12 @@ namespace Typing_Speed_Trainer
 
             CreateLessonCommand = new RelayCommand(CreateLessons);
 
-            _trainer.ResultsAvailable += OnResultsAvailable;
+            NotifiyMessage("Welcome to Typing-Speed-Trainer");
         }
+
+        #region Lesson Creation
+
+        public ICommand CreateLessonCommand { get; set; }
 
         public void CreateLessons(object o)
         {
@@ -124,8 +173,8 @@ namespace Typing_Speed_Trainer
                 _lastVisited.Append(uri);
                 LastVisitedUris = _lastVisited.Uris();
                 _trainer.CreateNewLessons(uri, LessonProvider.Dummy);
-                _currentLesson = _trainer.NextLesson();
-                LessonContent(_currentLesson.Content);
+
+                GetNextAvailableLesson();
             }
             catch (ArgumentNullException)
             {
@@ -135,48 +184,66 @@ namespace Typing_Speed_Trainer
             {
                 NotifiyMessage("Invalid URL: please check the spelling of the URL");
             }
+            catch (Exception)
+            {
+                NotifiyMessage("Unknown Error occured");
+            }
         }
+
+        private void GetNextAvailableLesson()
+        {
+            if (_trainer.AvailableLessons > 0)
+            {
+                _currentLesson = _trainer.NextLesson();
+                DisplayLessonContent();
+            }
+            else
+            {
+                _currentLesson = null;
+                NotifiyMessage("No more Lessons available, please create new Lessons");
+            }
+        }
+
+        #endregion
+
+        #region Lesson Execution
 
         public void StartLesson()
         {
             _trainer.Start(_currentLesson);
-            CaretPosition = _trainer.CurrentCharacter;
+            DisplayCaret(_trainer.CurrentCharacter);
         }
 
         public void KeystrokeDetected(char key)
         {
             _trainer.OnKeystrokeDetected(key);
-            CaretPosition = _trainer.CurrentCharacter;
+            DisplayCaret(_trainer.CurrentCharacter);
         }
 
         public void OnResultsAvailable(object sender, EventArgs eventArgs)
         {
-            LessonResult = new LessonResultRepresentation(_trainer.LessonResult);
-            LessonStatistic = new StatisticRepresentation(_trainer.LessonStatistic);
-            SessionStatistic = new StatisticRepresentation(_trainer.SessionStatistic);
+            UpdateStatistics();
+            GetNextAvailableLesson();
+        }
+
+        #endregion
+
+        #region Serialization
+
+        private const string PathToSaveFile = "statistic.json";
+
+        public void SaveStatistic()
+        {
+            _trainer.SaveStatistics(PathToSaveFile);
+        }
+
+        public void LoadStatistic()
+        {
+            if (!File.Exists(PathToSaveFile)) return;
+            _trainer.LoadStatistics(PathToSaveFile);
             OverallStatistic = new StatisticRepresentation(_trainer.OverallStatistic);
-
-            if (_trainer.AvailableLessons > 0)
-            {
-                _currentLesson = _trainer.NextLesson();
-                LessonContent(_currentLesson.Content);
-            }
-            else
-            {
-                NotifiyMessage("No more Lessons available, please create new Lessons");
-                _currentLesson = null;
-            }
         }
 
-        private void LessonContent(string lessonContent)
-        {
-            Content = lessonContent.Replace(' ', '␣').Replace('\r', '⏎');
-        }
-
-        private void NotifiyMessage(string text)
-        {
-            Content = text;
-            CaretPosition = int.MaxValue;
-        }
+        #endregion
     }
 }

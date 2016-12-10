@@ -112,5 +112,15 @@ namespace Typing_Speed_Trainer
         {
             return _executor.LessonExecuting;
         }
+
+        public void SaveStatistics(string pathToFile)
+        {
+            Statistic.SaveAsJson(OverallStatistic, pathToFile);
+        }
+
+        public void LoadStatistics(string pathToFile)
+        {
+            OverallStatistic = Statistic.LoadFromJson(pathToFile);
+        }
     }
 }

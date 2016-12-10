@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Typing_Speed_Trainer"
         xmlns:view="clr-namespace:Typing_Speed_Trainer.View"
         mc:Ignorable="d"
-        Title="Typing Speed Trainer" Height="760" Width="1024" MinWidth="1024" MinHeight="680" PreviewKeyDown="OnKeyDown" TextInput="OnTextInput">
+        Title="Typing Speed Trainer" Height="760" Width="1024" MinWidth="1024" MinHeight="680" PreviewKeyDown="OnKeyDown" TextInput="OnTextInput" Closed="OnClosed" Loaded="OnLoaded">
 
     <Window.Resources>
         <ResourceDictionary>
