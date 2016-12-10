@@ -73,21 +73,9 @@
                 <Setter Property="FontSize" Value="25"/>
                 <Setter Property="FontFamily" Value="Courier New"/>
                 <Setter Property="FontWeight" Value="DemiBold"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                <Setter Property="Margin" Value="25"/>
-                <Setter Property="Background" Value="{x:Null}"/>
-            </Style>
-
-            <Style x:Key="ResultStyle" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="Black"/>
-                <Setter Property="FontSize" Value="25"/>
-                <Setter Property="FontFamily" Value="Courier New"/>
-                <Setter Property="FontWeight" Value="DemiBold"/>
-                <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Padding" Value="20"/>
+                <Setter Property="Margin" Value="25"/>
                 <Setter Property="Background" Value="{x:Null}"/>
             </Style>
 
@@ -303,9 +291,9 @@
         </Grid>
 
         <!-- Exercise TextBox -->
-        <TextBlock Grid.Row="2" Style="{StaticResource ResultStyle}" Text="{Binding Content}" IsEnabled="False">
+        <TextBlock Grid.Row="2" Style="{StaticResource ExerciseTextStyle}" Text="{Binding Content}" IsEnabled="False">
             <TextBlock.TextEffects>
-                <TextEffect PositionStart="{Binding CaretPosition}" PositionCount="1" Foreground="DeepPink"></TextEffect>
+                <TextEffect PositionStart="{Binding CaretPosition}" PositionCount="1" Foreground="OrangeRed"></TextEffect>
             </TextBlock.TextEffects>
         </TextBlock>
 
@@ -340,7 +328,7 @@
                 <Label Grid.Column="5" Grid.Row="0" Style="{StaticResource LabelStatisicsValueStyle}" Content="{Binding LessonResult.Duration}" HorizontalContentAlignment="Left"/>
 
                 <!-- Typed in text with errors if made -->
-                <TextBlock view:Attached.FormattedText="{Binding LessonResult.WrittenText}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Style="{StaticResource ResultStyle}"/>
+                <TextBlock view:Attached.FormattedText="{Binding LessonResult.WrittenText}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" Style="{StaticResource ExerciseTextStyle}"/>
 
                 <!-- Lesson -->
                 <GroupBox Header="Last Lesson" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CenteredHeaderGroupBoxStyle}" Margin="40,0">

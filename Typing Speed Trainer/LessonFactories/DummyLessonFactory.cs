@@ -8,7 +8,7 @@ namespace Typing_Speed_Trainer.LessonFactories
         private const string EasyContent = "This is an easy Example";
         private const string MediumContent = "this is a medium example 1234";
         private const string HardContent = "This is a hard Example 1234";
-        private const string VeryHardContent = "This is a very hard Example 1234";
+        private const string VeryHardContent = "This is a very hard Example 1234!";
 
         public DummyLessonFactory() : base(null)
         {

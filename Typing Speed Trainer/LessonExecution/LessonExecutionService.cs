@@ -22,7 +22,7 @@ namespace Typing_Speed_Trainer.LessonExecution
             _stopwatch = new Stopwatch();
             LessonExecuting = false;
             _keystrokes = new StringBuilder();
-            CurrentCharacterIndex = int.MaxValue;
+            CurrentCharacterIndex = 0;
         }
 
         public virtual void Start(Lesson lesson)
@@ -42,7 +42,7 @@ namespace Typing_Speed_Trainer.LessonExecution
         {
             _stopwatch.Stop();
             LessonExecuting = false;
-            CurrentCharacterIndex = int.MaxValue;
+            CurrentCharacterIndex = 0;
             OnLessonCompleted(new LessonResult(_currentLesson, _keystrokes.ToString(), _stopwatch.Elapsed));
         }
 

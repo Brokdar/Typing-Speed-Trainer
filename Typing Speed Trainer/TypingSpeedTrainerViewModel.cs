@@ -21,7 +21,7 @@ namespace Typing_Speed_Trainer
         private void DisplayLessonContent()
         {
             Content = ConvertWhitespacesToVisualCharacters(_currentLesson.Content);
-            HideCaret();
+            DisplayCaret(_trainer.CurrentCharacter);
         }
 
         private static string ConvertWhitespacesToVisualCharacters(string value)
@@ -43,15 +43,16 @@ namespace Typing_Speed_Trainer
         public int CaretPosition
         {
             get { return _caretPosition; }
-            set { SetProperty(ref _caretPosition, value); }
+            set
+            {
+                SetProperty(ref _caretPosition, value);
+            }
         }
 
         private void DisplayCaret(int position)
         {
-            if (position < 0 || position >= Content.Length)
-                return;
-
-            CaretPosition = position;
+            if (_currentLesson != null)
+                CaretPosition = position;
         }
 
         private void HideCaret()
@@ -208,14 +209,14 @@ namespace Typing_Speed_Trainer
 
         #region Lesson Execution
 
-        public void StartLesson()
-        {
-            _trainer.Start(_currentLesson);
-            DisplayCaret(_trainer.CurrentCharacter);
-        }
-
         public void KeystrokeDetected(char key)
         {
+            if (!_trainer.IsLessonExecuting() && _currentLesson != null)
+            {
+                _trainer.Start(_currentLesson);
+            }
+
+            if (!_trainer.IsLessonExecuting()) return;
             _trainer.OnKeystrokeDetected(key);
             DisplayCaret(_trainer.CurrentCharacter);
         }

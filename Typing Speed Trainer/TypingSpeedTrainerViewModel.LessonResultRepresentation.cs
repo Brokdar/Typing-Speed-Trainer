@@ -87,8 +87,8 @@ namespace Typing_Speed_Trainer
 
             private static string HightlightErrors(LessonResult result)
             {
-                var lesson = result.Lesson.Content.Replace(' ', '␣').Replace('\r', '⏎');
-                var written = result.WrittenText.Replace(' ', '␣').Replace('\r', '⏎');
+                var lesson = ConvertWhitespacesToVisualCharacters(result.Lesson.Content);
+                var written = ConvertWhitespacesToVisualCharacters(result.WrittenText);
 
                 if (result.ErrorCount == 0)
                     return written;

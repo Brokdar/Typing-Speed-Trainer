@@ -22,12 +22,7 @@ namespace Typing_Speed_Trainer.View
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Return && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-            {
-                _viewModel.StartLesson();
-                e.Handled = true;
-            }
-            else if (e.Key == Key.Space)
+            if (e.Key == Key.Space)
             {
                 _viewModel.KeystrokeDetected(' ');
                 e.Handled = true;
